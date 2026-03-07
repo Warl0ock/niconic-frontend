@@ -9,7 +9,7 @@ function Home() {
 
   useEffect(() => {
     // Sesuaikan IP ini
-    fetch('http://172.18.0.1:5000/api/projects')
+    fetch('/api/projects')
       .then((res) => res.json())
       .then((data) => {
         setProjects(data);
