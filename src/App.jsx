@@ -94,7 +94,8 @@ function Home() {
 // Komponen Utama App yang membungkus Routing
 function App() {
   return (
-    <Router>
+// Ubah dari <Router> menjadi:
+    <Router basename="/portfolio">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/project/:id" element={<ProjectDetail />} />
