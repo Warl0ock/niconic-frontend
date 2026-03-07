@@ -8,7 +8,7 @@ function ProjectDetail() {
 
   useEffect(() => {
     // Ingat: Sesuaikan IP ini dengan IP Backend Anda
-    fetch(`http://172.18.0.1:5000/api/projects/${id}`)
+    fetch(`/api/projects/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setProject(data);
