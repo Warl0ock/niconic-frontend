@@ -17,8 +17,7 @@ const Footer = () => {
               </span>
             </Link>
             <p className="text-slate-400 max-w-sm leading-relaxed mb-8">
-              General Manager & Fullstack Developer berpengalaman dalam solusi iklan, 
-              digital printing, dan pengembangan web modern. Berlokasi di Cengkareng, Jakarta.
+              General Manager & Fullstack Developer
             </p>
             <div className="flex gap-4">
               {/* WhatsApp Business Link */}
@@ -48,7 +47,6 @@ const Footer = () => {
             <ul className="space-y-4 text-sm text-slate-400">
               <li><Link to="/" className="hover:text-brand-mint transition-colors">Portfolio</Link></li>
               <li><a href="https://niconic.dev" className="hover:text-brand-mint transition-colors">Main Site</a></li>
-              <li><Link to="/admin-niconic" className="hover:text-brand-mint transition-colors">Admin Access</Link></li>
             </ul>
           </div>
 
@@ -62,7 +60,7 @@ const Footer = () => {
               </li>
               <li className="flex flex-col">
                 <span className="text-[10px] text-slate-600 uppercase">Location</span>
-                <span className="text-slate-200">Cengkareng, West Jakarta</span>
+                <span className="text-slate-200">Jakarta</span>
               </li>
             </ul>
           </div>
@@ -71,12 +69,8 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-slate-800/50 flex flex-col md:row justify-between items-center gap-4">
           <p className="text-xs text-slate-500">
-            © {currentYear} niconic.dev — Built with React & Node.js for <span className="text-brand-mint font-bold">GROW</span> Advertising.
+            © {currentYear} niconic.dev — Built with React & Node.js
           </p>
-          <div className="flex gap-6 text-[10px] text-slate-600 uppercase tracking-widest">
-            <span className="hover:text-slate-400 cursor-pointer">Privacy Policy</span>
-            <span className="hover:text-slate-400 cursor-pointer">Terms of Service</span>
-          </div>
         </div>
       </div>
     </footer>
