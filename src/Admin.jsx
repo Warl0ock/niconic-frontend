@@ -7,7 +7,7 @@ const Admin = () => {
   const [file, setFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [formData, setFormData] = useState({
-    title: '', category: '', tags: '', image: '', spanClasses: 'md:col-span-1 md:row-span-1', description: '', challenge: ''1'
+    title: '', category: '', tags: '', image: '', spanClasses: 'md:col-span-1 md:row-span-1', description: '', challenge: ''
   });
 
   // Fungsi untuk mengambil data proyek
