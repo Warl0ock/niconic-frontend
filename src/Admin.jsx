@@ -45,10 +45,15 @@ const Admin = () => {
       }
 
       await fetch('/api/projects', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, image: finalImageUrl, tags: formData.tags.split(',').map(tag => tag.trim()) }),
-      });
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ 
+    ...formData, 
+    image: finalImageUrl, 
+    // Perbaikan: pastikan tags adalah string sebelum di-split, jika kosong kirim array kosong
+    tags: formData.tags ? formData.tags.split(',').map(tag => tag.trim()) : [] 
+  }),
+});
       alert('🚀 Proyek Berhasil!');
       setFormData({ title: '', category: '', tags: '', image: '', spanClasses: 'md:col-span-1 md:row-span-1' });
       setFile(null);
