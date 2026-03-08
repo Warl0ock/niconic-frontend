@@ -55,7 +55,7 @@ function ProjectDetail() {
         <div className="prose prose-invert prose-lg max-w-none text-slate-300">
           <h2 className="text-2xl font-bold text-white mb-4">Project Overview</h2>
           <p className="mb-6">
-           {project.description || "Deskripsi belum diisi."
+           {project.description || "Deskripsi belum diisi."}
           </p>
           <h2 className="text-2xl font-bold text-white mb-4">The Challenge</h2>
           <p>
