@@ -29,6 +29,16 @@ const Footer = () => {
               >
                 <i className="fab fa-whatsapp"></i>
               </a>
+              {/* LinkedIn */}
+              <a 
+                href="www.linkedin.com/in/nicolas-rahardjo-64a168328" 
+                target="_blank" 
+                rel="noreferrer"
+                className="w-12 h-12 rounded-2xl bg-slate-800 flex items-center justify-center text-xl text-slate-400 hover:bg-brand-mint hover:text-slate-900 transition-all shadow-lg"
+                title="Connect on LinkedIn"
+              >
+                <i className="fa-brands fa-linkedin-in"></i>
+              </a>
               {/* Upwork Link */}
               <a 
                 href="https://www.upwork.com/freelancers/nicolasrahardjo" 
