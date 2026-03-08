@@ -52,8 +52,8 @@ const ProjectDetail = () => {
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-200 pb-20">
-      <nav className="p-6 max-w-7xl mx-auto flex justify-between items-center">
-        <Link to="/portfolio" className="flex items-center gap-2 text-sm text-slate-400 hover:text-brand-mint transition-colors">
+     <nav className="p-6 max-w-7xl mx-auto flex justify-between items-center">
+        <Link to="/" className="flex items-center gap-2 text-sm text-slate-400 hover:text-brand-mint transition-colors">
           <span>←</span> BACK TO PROJECTS
         </Link>
         <div className="text-xs tracking-widest text-slate-500 uppercase">{project.category}</div>
