@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import ProjectDetail from './ProjectDetail';
 import Admin from './Admin'; 
 import Navbar from './components/Navbar'; 
+import Footer from './components/Footer'; // Import filenya
 
 // Komponen Home yang merender Bento Grid secara Dinamis
 function Home() {
@@ -94,12 +95,17 @@ function Home() {
 function App() {
   return (
     <Router basename="/portfolio">
-      <Navbar /> 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/project/:id" element={<ProjectDetail />} />
-        <Route path="/admin-niconic" element={<Admin />} /> 
-      </Routes>
+      <div className="flex flex-col min-h-screen">
+        <Navbar />
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/project/:id" element={<ProjectDetail />} />
+            <Route path="/admin-niconic" element={<Admin />} /> 
+          </Routes>
+        </main>
+        <Footer /> {/* Letakkan di sini agar selalu di bawah */}
+      </div>
     </Router>
   );
 }
