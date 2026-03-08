@@ -95,12 +95,13 @@ function Home() {
 function App() {
   return (
 // Ubah dari <Router> menjadi:
-    <Router basename="/portfolio">
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/project/:id" element={<ProjectDetail />} />
-      </Routes>
-    </Router>
+<Router basename="/portfolio">
+  <Routes>
+    <Route path="/" element={<Home />} />
+    <Route path="/project/:id" element={<ProjectDetail />} />
+    <Route path="/admin-niconic" element={<Admin />} /> {/* Rute Admin baru */}
+  </Routes>
+</Router>
   );
 }
 
