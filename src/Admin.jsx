@@ -7,7 +7,7 @@ const Admin = () => {
   const [file, setFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [formData, setFormData] = useState({
-    title: '', category: '', tags: '', image: '', spanClasses: 'md:col-span-1 md:row-span-1'
+    title: '', category: '', tags: '', image: '', spanClasses: 'md:col-span-1 md:row-span-1', description: '', challenge: ''1'
   });
 
   // Fungsi untuk mengambil data proyek
@@ -110,6 +110,10 @@ const Admin = () => {
              <div className="p-4 bg-slate-800/50 rounded-lg border border-dashed border-slate-600">
                <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} className="text-sm text-slate-400" />
              </div>
+            <textarea placeholder="Project Overview" className="w-full p-2 bg-slate-800 rounded border border-slate-700 h-24"
+              value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} />
+            <textarea placeholder="The Challenge" className="w-full p-2 bg-slate-800 rounded border border-slate-700 h-24"
+              value={formData.challenge} onChange={(e) => setFormData({...formData, challenge: e.target.value})} />
              <button disabled={isUploading} className="w-full p-3 rounded-lg font-bold bg-brand-mint text-slate-900">
                {isUploading ? 'Menyimpan...' : '🚀 Simpan'}
              </button>
