@@ -6,14 +6,15 @@ const Admin = () => {
   const [projects, setProjects] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
   
-  // State untuk file terpisah
   const [thumbFile, setThumbFile] = useState(null);
   const [galleryFiles, setGalleryFiles] = useState([]);
 
+  // UPDATE: Menambahkan property 'size' ke dalam state
   const [formData, setFormData] = useState({
     title: '',
     category: '',
     tags: '',
+    size: 'medium', // Default ukuran standar
     spanClasses: 'md:col-span-1 md:row-span-1',
     description: '',
     challenge: ''
@@ -70,7 +71,6 @@ const Admin = () => {
     
     setIsUploading(true);
     try {
-      // 1. Proses Upload File (Thumbnail & Gallery)
       const uploadData = new FormData();
       uploadData.append('thumbnail', thumbFile);
       
@@ -86,11 +86,11 @@ const Admin = () => {
       });
       const uploadResult = await uploadRes.json();
 
-      // 2. Simpan Data ke Database
+      // Payload final yang menyertakan 'size' untuk Bento Grid
       const finalPayload = {
         ...formData,
-        image: uploadResult.thumbnailUrl, // Thumbnail tunggal
-        gallery: uploadResult.galleryUrls || [], // Array untuk Slideshow
+        image: uploadResult.thumbnailUrl,
+        gallery: uploadResult.galleryUrls || [],
         tags: formData.tags ? formData.tags.split(',').map(tag => tag.trim()) : []
       };
 
@@ -104,6 +104,7 @@ const Admin = () => {
         alert('🚀 Proyek Berhasil Disimpan!');
         setFormData({ 
           title: '', category: '', tags: '', 
+          size: 'medium', // Reset ke medium
           spanClasses: 'md:col-span-1 md:row-span-1', 
           description: '', challenge: '' 
         });
@@ -151,47 +152,51 @@ const Admin = () => {
                 value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})} required />
             </div>
 
-            <input type="text" placeholder="Tags (pisahkan dengan koma: PHP, React, MySQL)" className="w-full p-2 bg-slate-800 rounded border border-slate-700 outline-none focus:border-brand-mint" 
+            <input type="text" placeholder="Tags (Contoh: Advertising, Printing, React)" className="w-full p-2 bg-slate-800 rounded border border-slate-700 outline-none focus:border-brand-mint" 
               value={formData.tags} onChange={(e) => setFormData({...formData, tags: e.target.value})} />
 
             <div className="grid grid-cols-2 gap-4">
               <div className="p-3 bg-slate-800/50 rounded-lg border border-dashed border-slate-600">
                 <label className="text-[10px] text-brand-mint uppercase font-bold block mb-1">Thumbnail (Bento)</label>
-                <input type="file" accept="image/*" onChange={(e) => setThumbFile(e.target.files[0])} className="text-[10px] text-slate-400" />
+                <input type="file" accept="image/*" onChange={(e) => setThumbFile(e.target.files[0])} className="text-[10px] text-slate-400 w-full" />
               </div>
               <div className="p-3 bg-slate-800/50 rounded-lg border border-dashed border-slate-600">
                 <label className="text-[10px] text-brand-mint uppercase font-bold block mb-1">Gallery (Slideshow)</label>
-                <input type="file" multiple accept="image/*" onChange={(e) => setGalleryFiles(e.target.files)} className="text-[10px] text-slate-400" />
+                <input type="file" multiple accept="image/*" onChange={(e) => setGalleryFiles(e.target.files)} className="text-[10px] text-slate-400 w-full" />
               </div>
             </div>
 
+            {/* UPDATE: Dropdown Ukuran Bento Grid */}
             <div className="space-y-1">
-              <label className="text-xs text-slate-400 ml-1">Ukuran Tampilan di Galeri Utama</label>
-              <select className="w-full p-2 bg-slate-800 rounded border border-slate-700 outline-none focus:border-brand-mint" 
-                value={formData.spanClasses} onChange={(e) => setFormData({...formData, spanClasses: e.target.value})}>
-                <option value="md:col-span-1 md:row-span-1">Kecil (1x1)</option>
-                <option value="md:col-span-2 md:row-span-1">Lebar (2x1)</option>
-                <option value="md:col-span-1 md:row-span-2">Tinggi (1x2)</option>
-                <option value="md:col-span-2 md:row-span-2">Besar (2x2)</option>
+              <label className="text-xs text-slate-400 ml-1">Ukuran Strategis (Bento Logic)</label>
+              <select 
+                className="w-full p-2 bg-slate-800 rounded border border-slate-700 outline-none focus:border-brand-mint cursor-pointer" 
+                value={formData.size} 
+                onChange={(e) => setFormData({...formData, size: e.target.value})}
+              >
+                <option value="small">Small (Arsip / Pudar)</option>
+                <option value="medium">Medium (Ukuran Standar)</option>
+                <option value="large">Large (Proyek Unggulan / GROW)</option>
               </select>
+              <p className="text-[9px] text-slate-500 italic ml-1">*Pilih 'Small' untuk proyek lama agar otomatis tampil grayscale.</p>
             </div>
 
-            <textarea placeholder="Project Overview (Menceritakan tentang apa proyek ini...)" className="w-full p-2 bg-slate-800 rounded border border-slate-700 h-28 outline-none focus:border-brand-mint"
+            <textarea placeholder="Project Overview..." className="w-full p-2 bg-slate-800 rounded border border-slate-700 h-28 outline-none focus:border-brand-mint"
               value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} />
             
-            <textarea placeholder="The Challenge (Menceritakan kendala dan solusi teknis...)" className="w-full p-2 bg-slate-800 rounded border border-slate-700 h-28 outline-none focus:border-brand-mint"
+            <textarea placeholder="The Challenge & Solution..." className="w-full p-2 bg-slate-800 rounded border border-slate-700 h-28 outline-none focus:border-brand-mint"
               value={formData.challenge} onChange={(e) => setFormData({...formData, challenge: e.target.value})} />
 
-            <button disabled={isUploading} className={`w-full p-3 rounded-lg font-bold transition-all shadow-lg ${isUploading ? 'bg-slate-600 text-slate-400 cursor-not-allowed' : 'bg-brand-mint text-slate-900 hover:scale-[1.02] shadow-brand-mint/20'}`}>
-              {isUploading ? 'Sedang Memproses...' : '🚀 Simpan Proyek'}
+            <button disabled={isUploading} className={`w-full p-3 rounded-lg font-bold transition-all shadow-lg ${isUploading ? 'bg-slate-600 text-slate-400 cursor-not-allowed' : 'bg-brand-mint text-slate-900 hover:scale-[1.01] active:scale-95 shadow-brand-mint/10'}`}>
+              {isUploading ? 'Sedang Memproses...' : '🚀 Publikasikan Proyek'}
             </button>
           </form>
         </div>
 
         {/* KOLOM KANAN: DAFTAR PROYEK */}
         <div className="flex flex-col">
-          <h2 className="text-2xl font-bold text-slate-400 border-b border-slate-700 pb-2 mb-4">Kelola Proyek</h2>
-          <div className="space-y-3 max-h-[650px] overflow-y-auto pr-2 custom-scrollbar">
+          <h2 className="text-2xl font-bold text-slate-400 border-b border-slate-700 pb-2 mb-4">Daftar Portofolio</h2>
+          <div className="space-y-3 max-h-[680px] overflow-y-auto pr-2 custom-scrollbar">
             {projects.length > 0 ? projects.map((p) => (
               <div key={p.id} className="flex justify-between items-center p-4 bg-slate-800/40 rounded-xl border border-slate-700 hover:border-slate-500 transition-colors">
                 <div className="flex items-center gap-3 truncate">
@@ -200,10 +205,15 @@ const Admin = () => {
                   </div>
                   <div className="truncate">
                     <p className="font-bold text-sm text-slate-200 truncate">{p.title}</p>
-                    <p className="text-[10px] text-brand-mint uppercase tracking-wider">{p.category}</p>
+                    <div className="flex gap-2 items-center">
+                       <span className="text-[9px] text-brand-mint uppercase tracking-wider font-bold">{p.category}</span>
+                       <span className={`text-[8px] px-1.5 py-0.5 rounded border uppercase ${p.size === 'small' ? 'border-slate-500 text-slate-500' : 'border-brand-mint text-brand-mint'}`}>
+                         {p.size || 'medium'}
+                       </span>
+                    </div>
                   </div>
                 </div>
-                <button onClick={() => handleDelete(p.id)} className="text-red-400 hover:text-white hover:bg-red-600 transition-all text-xs font-bold px-3 py-2 bg-red-900/10 rounded-lg border border-red-900/30">
+                <button onClick={() => handleDelete(p.id)} className="text-red-400 hover:text-white hover:bg-red-600 transition-all text-[10px] font-bold px-3 py-2 bg-red-900/10 rounded-lg border border-red-900/30">
                   Hapus
                 </button>
               </div>
@@ -211,10 +221,10 @@ const Admin = () => {
           </div>
           
           <button 
-            onClick={() => {sessionStorage.removeItem('adminToken'); setIsLoggedIn(false);}} 
-            className="mt-auto pt-6 text-xs text-slate-500 hover:text-brand-mint transition-colors text-center uppercase tracking-widest"
+            onClick={() => {sessionStorage.removeItem('adminToken'); window.location.reload();}} 
+            className="mt-6 text-xs text-slate-600 hover:text-red-400 transition-colors text-center uppercase tracking-[0.2em]"
           >
-            Sign Out Dashboard
+            Logout Management
           </button>
         </div>
       </div>
