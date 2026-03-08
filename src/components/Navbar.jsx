@@ -1,4 +1,5 @@
 import React from 'react';
+import logo from '../assets/logo.png'; // Import logo baru
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
@@ -17,7 +18,11 @@ const Navbar = () => {
         {/* LOGO SECTION */}
         <Link to="/" className="flex items-center gap-3 group">
           <div className="w-10 h-10 bg-brand-mint rounded-xl flex items-center justify-center font-black text-slate-900 shadow-lg shadow-brand-mint/20 group-hover:scale-110 transition-transform">
-            N
+               <img 
+                  src={logo} 
+                  alt="Niconic Logo" 
+                  className="h-10 w-auto group-hover:scale-105 transition-transform" 
+                />
           </div>
           <div className="flex flex-col">
             <span className="text-xl font-bold tracking-tighter text-white leading-none">
