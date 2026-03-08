@@ -55,12 +55,11 @@ function ProjectDetail() {
         <div className="prose prose-invert prose-lg max-w-none text-slate-300">
           <h2 className="text-2xl font-bold text-white mb-4">Project Overview</h2>
           <p className="mb-6">
-            In this project, I handled the end-to-end architecture and deployment... 
-            (Nantinya di sini Anda bisa menceritakan proses teknis, masalah yang diselesaikan, dan arsitektur sistemnya).
+           {project.description || "Deskripsi belum diisi."
           </p>
           <h2 className="text-2xl font-bold text-white mb-4">The Challenge</h2>
           <p>
-            Bridging the gap between reliable infrastructure and modern frontend interfaces required a meticulous approach...
+            {project.challenge || "Tantangan belum diisi."}
           </p>
         </div>
 
