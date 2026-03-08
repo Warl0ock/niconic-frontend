@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import ProjectDetail from './ProjectDetail';
 import Admin from './Admin'; // <--- TAMBAHKAN IMPORT INI
+import Navbar from './components/Navbar'; // Import komponen baru
 
 // Komponen Home (Tetap seperti kode Anda)
 function Home() {
@@ -63,11 +64,15 @@ function Home() {
 function App() {
   return (
     <Router basename="/portfolio">
+      <Navbar /> {/* Letakkan di sini agar muncul di tiap halaman */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/project/:id" element={<ProjectDetail />} />
         <Route path="/admin-niconic" element={<Admin />} /> 
       </Routes>
+    </Router>
+  );
+}
     </Router>
   );
 }
