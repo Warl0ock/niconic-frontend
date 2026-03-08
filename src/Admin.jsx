@@ -3,16 +3,26 @@ import React, { useState, useEffect } from 'react';
 const Admin = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
+  const [projects, setProjects] = useState([]); // State untuk daftar proyek
   const [file, setFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [formData, setFormData] = useState({
     title: '', category: '', tags: '', image: '', spanClasses: 'md:col-span-1 md:row-span-1'
   });
 
-  // Cek status login saat halaman dibuka
+  // Fungsi untuk mengambil data proyek
+  const fetchProjects = async () => {
+    const res = await fetch('/api/projects');
+    const data = await res.json();
+    setProjects(data);
+  };
+
   useEffect(() => {
     const token = sessionStorage.getItem('adminToken');
-    if (token === 'niconic-auth-token-2026') setIsLoggedIn(true);
+    if (token === 'niconic-auth-token-2026') {
+      setIsLoggedIn(true);
+      fetchProjects();
+    }
   }, []);
 
   const handleLogin = async (e) => {
@@ -26,8 +36,19 @@ const Admin = () => {
     if (data.success) {
       sessionStorage.setItem('adminToken', data.token);
       setIsLoggedIn(true);
+      fetchProjects();
     } else {
       alert(data.message);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Yakin ingin menghapus proyek ini?')) {
+      const res = await fetch(`/api/projects/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        alert('Terhapus!');
+        fetchProjects(); // Refresh daftar
+      }
     }
   };
 
@@ -45,82 +66,75 @@ const Admin = () => {
       }
 
       await fetch('/api/projects', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ 
-    ...formData, 
-    image: finalImageUrl, 
-    // Perbaikan: pastikan tags adalah string sebelum di-split, jika kosong kirim array kosong
-    tags: formData.tags ? formData.tags.split(',').map(tag => tag.trim()) : [] 
-  }),
-});
-      alert('🚀 Proyek Berhasil!');
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+            ...formData, 
+            image: finalImageUrl, 
+            tags: formData.tags ? formData.tags.split(',').map(tag => tag.trim()) : [] 
+        }),
+      });
+      alert('🚀 Berhasil!');
       setFormData({ title: '', category: '', tags: '', image: '', spanClasses: 'md:col-span-1 md:row-span-1' });
       setFile(null);
+      fetchProjects();
     } catch (err) { alert('Gagal!'); }
     finally { setIsUploading(false); }
   };
 
-  // Tampilan Form Login
   if (!isLoggedIn) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-900">
-        <form onSubmit={handleLogin} className="bg-slate-800 p-8 rounded-xl shadow-2xl border border-slate-700 w-80">
+        <form onSubmit={handleLogin} className="bg-slate-800 p-8 rounded-xl border border-slate-700 w-80">
           <h2 className="text-xl font-bold text-brand-mint mb-4 text-center">Admin Login</h2>
-          <input type="password" placeholder="Masukkan Password" 
-            className="w-full p-2 bg-slate-900 rounded border border-slate-700 text-white mb-4 outline-none focus:border-brand-mint"
-            value={passwordInput} onChange={(e) => setPasswordInput(e.target.value)} />
-          <button type="submit" className="w-full bg-brand-mint text-slate-900 font-bold py-2 rounded hover:bg-emerald-300 transition">Enter</button>
+          <input type="password" placeholder="Password" className="w-full p-2 bg-slate-900 rounded border border-slate-700 text-white mb-4 outline-none" value={passwordInput} onChange={(e) => setPasswordInput(e.target.value)} />
+          <button type="submit" className="w-full bg-brand-mint text-slate-900 font-bold py-2 rounded">Enter</button>
         </form>
       </div>
     );
   }
 
- // Tampilan Dashboard Admin
   return (
-    <div className="p-8 max-w-lg mx-auto bg-slate-900 text-white rounded-xl mt-10 shadow-2xl border border-slate-800">
-       <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-brand-mint">Admin Dashboard</h2>
-          <button onClick={() => {sessionStorage.removeItem('adminToken'); setIsLoggedIn(false);}} className="text-xs text-red-400 hover:underline">Logout</button>
-       </div>
+    <div className="p-8 max-w-4xl mx-auto bg-slate-900 text-white rounded-xl mt-10 shadow-2xl border border-slate-800">
+      <div className="grid md:grid-cols-2 gap-8">
+        {/* KOLOM KIRI: FORM INPUT */}
+        <div className="space-y-4">
+          <h2 className="text-2xl font-bold text-brand-mint mb-4">Tambah Proyek</h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
+             <input type="text" placeholder="Judul Proyek" className="w-full p-2 bg-slate-800 rounded border border-slate-700" 
+               value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} required />
+             <input type="text" placeholder="Kategori" className="w-full p-2 bg-slate-800 rounded border border-slate-700" 
+               value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})} required />
+             <input type="text" placeholder="Tags (koma)" className="w-full p-2 bg-slate-800 rounded border border-slate-700" 
+               value={formData.tags} onChange={(e) => setFormData({...formData, tags: e.target.value})} />
+             <div className="p-4 bg-slate-800/50 rounded-lg border border-dashed border-slate-600">
+               <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} className="text-sm text-slate-400" />
+             </div>
+             <button disabled={isUploading} className="w-full p-3 rounded-lg font-bold bg-brand-mint text-slate-900">
+               {isUploading ? 'Menyimpan...' : '🚀 Simpan'}
+             </button>
+          </form>
+        </div>
 
-       <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Judul */}
-          <input type="text" placeholder="Judul Proyek" className="w-full p-2 bg-slate-800 rounded border border-slate-700 outline-none focus:border-brand-mint" 
-            value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} required />
-          
-          {/* Kategori */}
-          <input type="text" placeholder="Kategori (Advertising / IT / Car Mod)" className="w-full p-2 bg-slate-800 rounded border border-slate-700 outline-none focus:border-brand-mint" 
-            value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})} required />
-          
-          {/* KOLOM TAGS YANG HILANG */}
-          <input type="text" placeholder="Tags (pisahkan dengan koma, misal: PHP, MySQL)" className="w-full p-2 bg-slate-800 rounded border border-slate-700 outline-none focus:border-brand-mint" 
-            value={formData.tags} onChange={(e) => setFormData({...formData, tags: e.target.value})} />
-
-          {/* INPUT FILE GAMBAR */}
-          <div className="p-4 bg-slate-800/50 rounded-lg border border-dashed border-slate-600">
-            <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} className="text-sm text-slate-400" />
-            <p className="text-[10px] text-slate-500 mt-2">Atau input URL manual jika tidak upload:</p>
-            <input type="text" placeholder="https://..." className="w-full p-1 bg-slate-800 rounded border border-slate-700 text-xs" 
-              value={formData.image} onChange={(e) => setFormData({...formData, image: e.target.value})} />
+        {/* KOLOM KANAN: DAFTAR PROYEK (HAPUS) */}
+        <div>
+          <h2 className="text-2xl font-bold text-slate-400 mb-4">Kelola Proyek</h2>
+          <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2">
+            {projects.map((p) => (
+              <div key={p.id} className="flex justify-between items-center p-3 bg-slate-800 rounded border border-slate-700">
+                <div className="truncate mr-4">
+                  <p className="font-bold text-sm">{p.title}</p>
+                  <p className="text-[10px] text-slate-500">{p.category}</p>
+                </div>
+                <button onClick={() => handleDelete(p.id)} className="text-red-400 hover:text-red-300 text-xs font-bold p-2 bg-red-900/20 rounded">
+                  Hapus
+                </button>
+              </div>
+            ))}
           </div>
-
-          {/* KOLOM UKURAN GRID YANG HILANG */}
-          <div className="space-y-1">
-            <label className="text-xs text-slate-400 ml-1">Ukuran Bento Grid</label>
-            <select className="w-full p-2 bg-slate-800 rounded border border-slate-700 focus:border-brand-mint outline-none" 
-              value={formData.spanClasses} onChange={(e) => setFormData({...formData, spanClasses: e.target.value})}>
-              <option value="md:col-span-1 md:row-span-1">Kecil (1x1)</option>
-              <option value="md:col-span-2 md:row-span-1">Lebar (2x1)</option>
-              <option value="md:col-span-1 md:row-span-2">Tinggi (1x2)</option>
-              <option value="md:col-span-2 md:row-span-2">Besar (2x2)</option>
-            </select>
-          </div>
-
-          <button disabled={isUploading} className="w-full p-3 rounded-lg font-bold bg-brand-mint text-slate-900 hover:bg-emerald-300 transition-all shadow-lg shadow-brand-mint/20">
-            {isUploading ? 'Sedang Menyimpan...' : '🚀 Simpan Proyek'}
-          </button>
-       </form>
+        </div>
+      </div>
+      <button onClick={() => {sessionStorage.removeItem('adminToken'); setIsLoggedIn(false);}} className="mt-8 text-xs text-slate-500 hover:underline">Logout</button>
     </div>
   );
 };
