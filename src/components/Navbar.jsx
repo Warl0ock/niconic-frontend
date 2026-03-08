@@ -1,7 +1,6 @@
 import React from 'react';
+import logo from '../assets/logo.png'; // Pastikan file ada di src/assets/
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-// Pastikan file logo.png ada di folder src/assets/
-import logo from '../assets/logo.png'; 
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -10,8 +9,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     sessionStorage.removeItem('adminToken');
-    // Gunakan navigate untuk pengalaman UX yang lebih mulus
-    navigate('/admin-niconic');
+    navigate('/admin-niconic'); // Redirect manual agar lebih bersih
     window.location.reload(); 
   };
 
@@ -21,8 +19,8 @@ const Navbar = () => {
         
         {/* LOGO SECTION */}
         <Link to="/" className="flex items-center gap-4 group">
-          {/* Container Logo - Disederhanakan agar logo gambar terlihat jelas */}
-          <div className="flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+          {/* Logo Container - Dibuat fleksibel tanpa pembatas kaku agar logo printing Anda terlihat jelas */}
+          <div className="transition-transform duration-300 group-hover:scale-110">
             <img 
               src={logo} 
               alt="Niconic Logo" 
@@ -42,29 +40,22 @@ const Navbar = () => {
 
         {/* NAVIGATION LINKS */}
         <div className="flex items-center gap-8">
-          {isAdminPage ? (
-            <button 
-              onClick={handleLogout}
-              className="text-xs font-bold text-red-400 hover:text-red-300 transition-colors uppercase tracking-[0.15em]"
-            >
-              Sign Out
-            </button>
-          ) : (
-            <>
-              <a 
-                href="https://niconic.dev" 
-                className="text-sm font-medium text-slate-400 hover:text-brand-mint transition-colors"
-              >
-                Main Site
-              </a>
-              <Link 
-                to="/" 
-                className="px-6 py-2.5 bg-brand-mint text-slate-900 rounded-full text-sm font-bold hover:shadow-[0_0_20px_rgba(45,212,191,0.4)] transition-all transform hover:-translate-y-0.5 active:translate-y-0"
-              >
-                Portfolio
-              </Link>
-            </>
+          {!isAdminPage && (
+            <a href="https://niconic.dev" className="text-sm font-medium text-slate-400 hover:text-brand-mint transition-colors">
+              Main Site
+            </a>
           )}
+          <Link 
+            to={isAdminPage ? "#" : "/"} 
+            className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all ${
+              isAdminPage 
+              ? 'text-red-400 hover:text-red-300' 
+              : 'bg-brand-mint text-slate-900 hover:shadow-[0_0_20px_rgba(45,212,191,0.4)]'
+            }`}
+            onClick={isAdminPage ? handleLogout : undefined}
+          >
+            {isAdminPage ? 'Sign Out' : 'Portfolio'}
+          </Link>
         </div>
       </div>
     </nav>
