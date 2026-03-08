@@ -25,9 +25,9 @@ const Footer = () => {
                 href="https://wa.me/628122227696?text=Halo%20Nico,%20saya%20tertarik%20dengan%20jasa%20Anda." 
                 target="_blank" 
                 rel="noreferrer"
-                className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-brand-mint hover:text-slate-900 transition-all"
+                className="w-12 h-12 rounded-2xl bg-slate-800 flex items-center justify-center text-xl text-slate-400 hover:bg-brand-mint hover:text-slate-900 transition-all shadow-lg"
               >
-                <i className="fab fa-whatsapp"></i>
+                <i className="fa-brands fa-whatsapp"></i>
               </a>
               {/* LinkedIn */}
               <a 
@@ -44,7 +44,8 @@ const Footer = () => {
                 href="https://www.upwork.com/freelancers/nicolasrahardjo" 
                 target="_blank" 
                 rel="noreferrer"
-                className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-brand-mint hover:text-slate-900 transition-all"
+                className="w-12 h-12 rounded-2xl bg-slate-800 flex items-center justify-center text-xl text-slate-400 hover:bg-brand-mint hover:text-slate-900 transition-all shadow-lg"
+                title="Connect on UpWork"
               >
                 <i className="fas fa-briefcase"></i>
               </a>
