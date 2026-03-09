@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import ProjectDetail from './ProjectDetail';
 import Admin from './Admin'; 
 import Navbar from './components/Navbar'; 
-import Footer from './components/Footer'; // Import filenya
+import Footer from './components/Footer';
 
 // Komponen Home yang merender Bento Grid secara Dinamis
 function Home() {
@@ -11,7 +11,6 @@ function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Pastikan API Anda mengirimkan field 'size' (small, medium, large)
     fetch('/api/projects')
       .then((res) => res.json())
       .then((data) => {
@@ -20,15 +19,14 @@ function Home() {
       });
   }, []);
 
-  // Fungsi Helper untuk menentukan class Tailwind berdasarkan ukuran
   const getGridClasses = (size) => {
     switch (size) {
       case 'large':
-        return 'md:col-span-2 md:row-span-2 h-full'; // Menonjol (Featured)
+        return 'md:col-span-2 md:row-span-2 h-full';
       case 'medium':
-        return 'md:col-span-2 md:row-span-1 h-full'; // Lebar (Trending)
+        return 'md:col-span-2 md:row-span-1 h-full';
       case 'small':
-        return 'md:col-span-1 md:row-span-1 opacity-50 grayscale hover:opacity-100 hover:grayscale-0'; // Arsip (Lama)
+        return 'md:col-span-1 md:row-span-1 opacity-70 grayscale hover:opacity-100 hover:grayscale-0';
       default:
         return 'md:col-span-1 md:row-span-1';
     }
@@ -63,22 +61,29 @@ function Home() {
                 key={project.id} 
                 className={`group relative rounded-3xl p-8 flex flex-col justify-end overflow-hidden transition-all duration-500 hover:-translate-y-2 border border-slate-700/50 hover:border-brand-mint/50 cursor-pointer shadow-2xl ${getGridClasses(project.size || project.spanClasses)}`}
               >
-                {/* Background Image */}
+                {/* PENYESUAIAN KECERAHAN: 
+                   1. Opacity gambar naik dari 30% ke 60% agar lebih terang.
+                   2. Hover opacity naik ke 80% agar lebih pop-out.
+                */}
                 <img 
                   src={project.image} 
                   alt={project.title} 
-                  className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-all duration-700 group-hover:scale-110" 
+                  className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-all duration-700 group-hover:scale-110" 
                 />
                 
-                {/* Overlay Gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent"></div>
+                {/* PENYESUAIAN OVERLAY: 
+                   Gradasi hitam dikurangi kepekatannya (dari opacity penuh ke 40%) 
+                   agar gambar di belakangnya lebih terlihat terang.
+                */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-slate-900/10 to-transparent"></div>
                 
-                {/* Content Info (Disembunyikan sedikit jika 'small' agar clean) */}
+                {/* Content Info */}
                 <div className={`relative z-10 transition-all duration-300 ${project.size === 'small' ? 'scale-90 origin-bottom-left group-hover:scale-100' : ''}`}>
-                  <span className="text-brand-mint text-[10px] font-mono mb-2 block uppercase tracking-[0.3em]">
+                  {/* Penambahan drop-shadow agar teks tetap terbaca di background yang lebih terang */}
+                  <span className="text-brand-mint text-[10px] font-mono mb-2 block uppercase tracking-[0.3em] drop-shadow-md">
                     {project.category}
                   </span>
-                  <h3 className={`${project.size === 'large' ? 'text-3xl' : 'text-xl'} font-bold mb-1 text-white leading-tight`}>
+                  <h3 className={`${project.size === 'large' ? 'text-3xl' : 'text-xl'} font-bold mb-1 text-white leading-tight drop-shadow-lg`}>
                     {project.title}
                   </h3>
                 </div>
@@ -104,7 +109,7 @@ function App() {
             <Route path="/admin-niconic" element={<Admin />} /> 
           </Routes>
         </main>
-        <Footer /> {/* Letakkan di sini agar selalu di bawah */}
+        <Footer />
       </div>
     </Router>
   );
