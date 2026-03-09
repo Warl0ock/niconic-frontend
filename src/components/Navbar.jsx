@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+// Impor logo kupu-kupu asli. Pastikan file ini ada di folder src/assets/
+import ButterflyLogo from '../assets/logo.png'; 
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,14 +12,17 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
       <div className="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
         
-        {/* LOGO SECTION */}
+        {/* LOGO SECTION - Kembali ke logo kupu-kupu asli */}
         <Link to="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 bg-brand-mint rounded-lg flex items-center justify-center font-black text-slate-900 group-hover:rotate-12 transition-transform">
-            N
-          </div>
+          {/* Tampilkan logo kupu-kupu */}
+          <img src={ButterflyLogo} alt="Niconic_Logo" className="w-8 h-8 group-hover:scale-110 transition-transform" />
+          
           <div className="flex flex-col">
-            <span className="text-white font-black tracking-tighter leading-none">niconic.dev</span>
-            <span className="text-[8px] text-slate-500 uppercase tracking-[0.2em] font-bold">Iconic Solutions</span>
+            {/* Perbaikan Visual Teks: 'niconic' putih, 'dev' mint */}
+            <span className="text-white font-black tracking-tighter leading-none">
+              niconic.<span className="text-brand-mint">dev</span>
+            </span>
+            <span className="text-[8px] text-slate-500 uppercase tracking-[0.2em] font-bold">ICONIC SOLUTIONS</span>
           </div>
         </Link>
 
