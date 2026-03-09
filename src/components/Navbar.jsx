@@ -1,60 +1,70 @@
-import React from 'react';
-import logo from '../assets/logo.png'; // Pastikan file ada di src/assets/
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
-  const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const isAdminPage = location.pathname.includes('admin-niconic');
 
-  const handleLogout = () => {
-    sessionStorage.removeItem('adminToken');
-    navigate('/admin-niconic'); // Redirect manual agar lebih bersih
-    window.location.reload(); 
-  };
-
   return (
-    <nav className="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
-      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
+      <div className="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
         
         {/* LOGO SECTION */}
-        <Link to="/" className="flex items-center gap-4 group">
-          {/* Logo Container - Dibuat fleksibel tanpa pembatas kaku agar logo printing Anda terlihat jelas */}
-          <div className="transition-transform duration-300 group-hover:scale-110">
-            <img 
-              src={logo} 
-              alt="Niconic Logo" 
-              className="h-12 w-auto object-contain drop-shadow-[0_0_8px_rgba(45,212,191,0.3)]" 
-            />
+        <Link to="/" className="flex items-center gap-2 group">
+          <div className="w-8 h-8 bg-brand-mint rounded-lg flex items-center justify-center font-black text-slate-900 group-hover:rotate-12 transition-transform">
+            N
           </div>
-          
           <div className="flex flex-col">
-            <span className="text-xl font-bold tracking-tighter text-white leading-none">
-              niconic<span className="text-brand-mint">.dev</span>
-            </span>
-            <span className="text-[10px] text-slate-500 tracking-[0.2em] uppercase mt-1.5 font-medium">
-              {isAdminPage ? 'Management Panel' : 'Iconic Solutions'}
-            </span>
+            <span className="text-white font-black tracking-tighter leading-none">niconic.dev</span>
+            <span className="text-[8px] text-slate-500 uppercase tracking-[0.2em] font-bold">Iconic Solutions</span>
           </div>
         </Link>
 
-        {/* NAVIGATION LINKS */}
-        <div className="flex items-center gap-8">
+        {/* DESKTOP NAVIGATION - Hidden on Mobile */}
+        <div className="hidden md:flex items-center gap-8">
           {!isAdminPage && (
-            <a href="https://niconic.dev" className="text-sm font-medium text-slate-400 hover:text-brand-mint transition-colors">
-              Main Site
-            </a>
+            <>
+              <a href="https://niconic.dev" className="text-xs font-black text-slate-400 hover:text-brand-mint uppercase tracking-widest transition-colors">
+                Main Site
+              </a>
+              <Link to="/" className="px-5 py-2 bg-brand-mint text-slate-900 text-xs font-black rounded-full uppercase tracking-widest hover:shadow-[0_0_20px_rgba(45,212,191,0.3)] transition-all">
+                Portfolio
+              </Link>
+            </>
           )}
-          <Link 
-            to={isAdminPage ? "#" : "/"} 
-            className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all ${
-              isAdminPage 
-              ? 'text-red-400 hover:text-red-300' 
-              : 'bg-brand-mint text-slate-900 hover:shadow-[0_0_20px_rgba(45,212,191,0.4)]'
-            }`}
-            onClick={isAdminPage ? handleLogout : undefined}
+          {isAdminPage && (
+            <Link to="/" className="text-xs font-black text-red-400 uppercase tracking-widest">Logout</Link>
+          )}
+        </div>
+
+        {/* HAMBURGER BUTTON - Visible only on Mobile */}
+        <button 
+          onClick={() => setIsOpen(!isOpen)}
+          className="md:hidden text-white p-2 focus:outline-none"
+        >
+          <div className="w-6 h-0.5 bg-brand-mint mb-1.5 transition-all"></div>
+          <div className="w-6 h-0.5 bg-brand-mint mb-1.5"></div>
+          <div className="w-4 h-0.5 bg-brand-mint ml-auto"></div>
+        </button>
+      </div>
+
+      {/* MOBILE MENU DROPDOWN */}
+      <div className={`md:hidden overflow-hidden transition-all duration-300 bg-slate-800 border-b border-slate-700 ${isOpen ? 'max-h-60' : 'max-h-0'}`}>
+        <div className="px-6 py-6 flex flex-col gap-6">
+          <a 
+            href="https://niconic.dev" 
+            className="text-sm font-bold text-slate-300 hover:text-brand-mint uppercase tracking-widest"
+            onClick={() => setIsOpen(false)}
           >
-            {isAdminPage ? 'Sign Out' : 'Portfolio'}
+            Main Site
+          </a>
+          <Link 
+            to="/" 
+            className="text-sm font-bold text-brand-mint uppercase tracking-widest"
+            onClick={() => setIsOpen(false)}
+          >
+            Portfolio
           </Link>
         </div>
       </div>
